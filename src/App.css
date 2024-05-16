@@ -1,38 +1,100 @@
-.App {
-  text-align: center;
+/* App.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    padding: 5%;
+    /* height: 100vh; */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.image-upload {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    align-items: center;
+}
+.mb10 {
+    margin-bottom: 10px;
+}
+.fr {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+}
+.chooseFile {
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 350px;
+    justify-content: space-around;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.fileContainer {
+    margin-top: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.fileInput {
+    margin-bottom: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+.image-show {
+    position: relative;
+}
+canvas {
+    width: 100%;
+    height: 100%;
+    max-width: 500px !important;
+    max-height: 500px !important;
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+}
+.img {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+    margin-top: 50px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.text-overlay {
+    position: absolute;
+    bottom: 20px; /* 아래 여백 조정 */
+    left: 20px; /* 왼쪽 여백 조정 */
+    color: #676767; /* 텍스트 색상 */
+    width: 150px !important;
+    background-color: #fff;
+    font-size: 1rem; /* 텍스트 크기 */
+    line-height: 25px;
+    font-family: Arial, sans-serif; /* 텍스트 폰트 */
+    /* box-shadow: 2px 2px 2px rgba(185, 184, 184, 0.653);  */
+}
+.text-table td {
+    height: 5px !important;
+}
+.text-table td:first-child {
+    width: 40px !important;
+}
+/* .text-table td {
+    outline: 1px solid #676767;
+    padding: 0 10px;
+    height: 25px;
+}
+.text-table td:first-child {
+
+    width: 50px;
+} */
+
+label {
+    padding: 0 10px !important;
+}
+.addBtn {
+    margin-left: 10px;
+}
+
+.input-table td:first-child {
+    width: 25%;
 }
