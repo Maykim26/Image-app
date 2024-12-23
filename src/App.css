@@ -1,11 +1,20 @@
 /* App.css */
+@font-face {
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: normal;
+    src: url("./fonts/NotoSansKR-VariableFont_wght.ttf") format("truetype");
+}
 
+body,
+.css-knl688-JoyTable-root {
+    font-family: "Noto Sans KR", sans-serif !important;
+}
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     /* justify-content: center; */
-    padding: 5%;
+    padding: 2%;
     /* height: 100vh; */
 }
 
@@ -33,7 +42,7 @@
 }
 
 .fileContainer {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .fileInput {
@@ -42,6 +51,8 @@
 
 .image-show {
     position: relative;
+    padding: 0;
+    margin: 0;
 }
 canvas {
     width: 100%;
@@ -52,17 +63,19 @@ canvas {
     left: -9999px;
     top: -9999px;
 }
-.img {
-    width: 100%;
-    height: 100%;
+img {
+    width: 90%;
+    height: 90%;
     max-width: 500px;
     max-height: 500px;
     margin-top: 50px;
+    object-fit: cover;
+    overflow: visible;
 }
 
 .text-overlay {
     position: absolute;
-    bottom: 20px; /* 아래 여백 조정 */
+    bottom: 70px; /* 아래 여백 조정 */
     left: 20px; /* 왼쪽 여백 조정 */
     color: #676767; /* 텍스트 색상 */
     width: 150px !important;
@@ -87,14 +100,135 @@ canvas {
 
     width: 50px;
 } */
-
+input:focus {
+    --Input-focusedThickness: var(--joy-focus-thickness, 2px);
+    --Input-focusedHighlight: var(--joy-palette-primary-500, #0b6bcb);
+}
+input[type="date"] {
+    --Input-radius: var(--joy-radius-sm, 6px);
+    --Input-gap: 0.5rem;
+    --Input-placeholderColor: inherit;
+    --Input-placeholderOpacity: 0.64;
+    width: 100%;
+    --Input-decoratorColor: var(
+        --joy-palette-text-icon,
+        var(--joy-palette-neutral-500, #636b74)
+    );
+    --Input-focused: 0;
+    --Input-focusedThickness: var(--joy-focus-thickness, 2px);
+    --Input-focusedHighlight: var(--joy-palette-primary-500, #0b6bcb);
+    --Input-minHeight: 2rem;
+    --Input-paddingInline: 0.5rem;
+    --Input-decoratorChildHeight: min(1.5rem, var(--Input-minHeight));
+    --Icon-fontSize: var(--joy-fontSize-xl, 1.25rem);
+    --Input-decoratorChildOffset: min(
+        calc(
+            var(--Input-paddingInline) -
+                (
+                    var(--Input-minHeight) - 2 * var(--variant-borderWidth, 0px) -
+                        var(--Input-decoratorChildHeight)
+                ) / 2
+        ),
+        var(--Input-paddingInline)
+    );
+    --_Input-paddingBlock: max(
+        (
+                var(--Input-minHeight) - 2 * var(--variant-borderWidth, 0px) -
+                    var(--Input-decoratorChildHeight)
+            ) / 2,
+        0px
+    );
+    --Input-decoratorChildRadius: max(
+        var(--Input-radius) - var(--variant-borderWidth, 0px) -
+            var(--_Input-paddingBlock),
+        min(
+            var(--_Input-paddingBlock) + var(--variant-borderWidth, 0px),
+            var(--Input-radius) / 2
+        )
+    );
+    --Button-minHeight: var(--Input-decoratorChildHeight);
+    --Button-paddingBlock: 0px;
+    --IconButton-size: var(--Input-decoratorChildHeight);
+    --Button-radius: var(--Input-decoratorChildRadius);
+    --IconButton-radius: var(--Input-decoratorChildRadius);
+    box-sizing: border-box;
+    box-shadow: var(--joy-shadowRing, 0 0 #000),
+        0px 1px 2px 0px
+            rgba(
+                var(--joy-shadowChannel, 21 21 21) /
+                    var(--joy-shadowOpacity, 0.08)
+            );
+    min-width: 0;
+    min-height: var(--Input-minHeight);
+    cursor: text;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding-inline: var(--Input-paddingInline);
+    border-radius: var(--Input-radius);
+    font-family: var(
+        --joy-fontFamily-body,
+        "Inter",
+        var(
+            --joy-fontFamily-fallback,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            Helvetica,
+            Arial,
+            sans-serif,
+            "Apple Color Emoji",
+            "Segoe UI Emoji",
+            "Segoe UI Symbol"
+        )
+    );
+    font-size: var(--joy-fontSize-sm, 0.875rem);
+    line-height: var(--joy-lineHeight-md, 1.5);
+    color: var(
+        --variant-outlinedColor,
+        var(
+            --joy-palette-primary-outlinedColor,
+            var(--joy-palette-primary-500, #0b6bcb)
+        )
+    );
+    --variant-borderWidth: 1px;
+    border: var(--variant-borderWidth) solid;
+    border-color: var(
+        --variant-outlinedBorder,
+        var(
+            --joy-palette-primary-outlinedBorder,
+            var(--joy-palette-primary-300, #97c3f0)
+        )
+    );
+    background-color: var(
+        --joy-palette-background-surface,
+        var(--joy-palette-neutral-50, #fbfcfe)
+    );
+}
 label {
     padding: 0 10px !important;
 }
 .addBtn {
-    margin-left: 10px;
+    margin: 0 10px;
 }
 
 .input-table td:first-child {
     width: 25%;
+}
+.img-container > .reactEasyCrop_Container {
+    width: 300px !important;
+    height: 300px !important;
+    margin-top: 10px;
+    position: relative;
+}
+.css-sx5hge > .MuiTextField-root,
+.css-sx5hge > .MuiPickersTextField-root {
+    min-width: 100px !important;
+}
+.reactEasyCrop_CropArea {
+    width: 270px !important;
+    height: 270px !important;
 }

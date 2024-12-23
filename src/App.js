@@ -1,21 +1,27 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./App.css";
+import MyCropper from "./Crop";
 import Button from "@mui/joy/Button";
 import Input from "@mui/joy/Input";
 import Table from "@mui/joy/Table";
+import { styled } from "@mui/material/styles";
+import OpenInNew from "@mui/icons-material/OpenInNew";
 
-const initialText = ["", "", "", "", ""];
+const initialText = ["", "", "", ""];
 const fixedText = ["공사명", "공종", "위치", "내용", "일자"];
 
 const App = () => {
     const [imageName, setImageName] = useState("");
     const [imageSrc, setImageSrc] = useState("");
+    const [variant, setVariant] = useState("soft");
     const [inputText, setInputText] = useState(initialText);
     const [textList, setTextList] = useState([]);
     const [isFileSelected, setIsFileSelected] = useState(false);
-    const canvasRef = useRef(null);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
     const fileInputRef = useRef(null);
+    const [selectedDate, setSelectedDate] = useState("");
 
+    const canvasContainer = document.createElement("div");
     useEffect(() => {
         const newTextList = inputText.map((text, index) =>
             text.trim() !== "" ? text : ""
@@ -45,72 +51,130 @@ const App = () => {
     };
 
     const handleFileButtonClick = () => fileInputRef.current.click();
+    const handleCropComplete = useCallback((croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    }, []);
+    const handleDownloadImage = async () => {
+        console.log("Cropped Area Pixels:", croppedAreaPixels);
+        if (!imageSrc || !croppedAreaPixels) {
+            console.error("Image source or cropped area pixels not available.");
+            return;
+        }
 
-    const handleDownloadImage = () => {
-        // 캔버스와 이미지 텍스트를 감싸는 부분에 스타일 적용
         const canvasContainer = document.createElement("div");
         canvasContainer.style.display = "flex";
         canvasContainer.style.flexDirection = "column";
+        canvasContainer.style.border = "1px solid red";
+
+        const { width, height, x, y } = croppedAreaPixels;
 
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
+        const MAX_SIZE = 500;
+        let newWidth = width;
+        let newHeight = height;
+        if (width > MAX_SIZE || height > MAX_SIZE) {
+            if (width > height) {
+                newWidth = MAX_SIZE;
+                newHeight = (height / width) * MAX_SIZE;
+            } else {
+                newHeight = MAX_SIZE;
+                newWidth = (width / height) * MAX_SIZE;
+            }
+        }
+        ctx.fillText(selectedDate, 10, 50);
+
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+
         const image = new Image();
-
-        image.onload = () => {
-            const originalWidth = image.width;
-            const originalHeight = image.height;
-            const minSize = Math.min(originalWidth, originalHeight); // 이미지의 가로 또는 세로 중 작은 값
-
-            canvas.width = minSize; // 가로와 세로 크기를 최소값으로 설정하여 1:1 비율로 자르기 위함
-            canvas.height = minSize;
-
-            // 이미지를 캔버스에 그리기
-            ctx.drawImage(image, 0, 0, minSize, minSize);
+        image.onload = async () => {
+            ctx.drawImage(
+                image,
+                x,
+                y,
+                width,
+                height,
+                0,
+                0,
+                newWidth,
+                newHeight
+            );
 
             ctx.fillStyle = "white";
-            ctx.fillRect(10, canvas.height - 110, 200, 100);
+            const paddingTop = 8;
+            const paddingBottom = 8;
 
-            // 고정된 텍스트 그리기 (왼쪽)
-            ctx.font = "16px Arial";
+            ctx.fillStyle = "white";
+            ctx.fillRect(
+                10,
+                canvas.height - 110 - paddingTop,
+                180,
+                74 + paddingTop + paddingBottom
+            );
+            ctx.font = "10px Arial";
             ctx.fillStyle = "#222";
 
             fixedText.forEach((text, index) => {
-                const y = canvas.height - 95 + index * 20; // 텍스트 줄 간격을 고려하여 y 좌표를 계산합니다.
-                ctx.fillText(text, 10, y);
+                if (index < 4) {
+                    const y = canvas.height - 100 + index * 18;
+                    const borderWidth = 2;
+                    const borderY = y + borderWidth / 2;
+                    ctx.strokeStyle = "#f1f4f8";
+                    ctx.lineWidth = borderWidth;
+
+                    ctx.beginPath();
+                    ctx.moveTo(10, borderY);
+                    ctx.lineTo(190, borderY);
+                    ctx.stroke();
+                }
+
+                const y = canvas.height - 105 + index * 18;
+                ctx.fillText(text, 15, y);
             });
 
-            const userTextX = 110; // 사용자가 추가한 텍스트 시작 위치 (오른쪽)
-            ctx.textAlign = "left"; // 텍스트를 오른쪽으로 정렬합니다.
+            const userTextX = 60;
+            ctx.textAlign = "left";
             textList.forEach((text, index) => {
-                const y = canvas.height - 95 + index * 20; // 텍스트 줄 간격을 고려하여 y 좌표를 계산합니다.
+                if (index < 4) {
+                    const y = canvas.height - 100 + index * 18;
+                    const borderWidth = 2;
+                    const borderY = y + borderWidth / 2;
+                    ctx.strokeStyle = "#eee";
+                    ctx.lineWidth = borderWidth;
+
+                    ctx.beginPath();
+                    ctx.moveTo(userTextX, borderY);
+                    ctx.lineTo(190, borderY);
+                    ctx.stroke();
+                }
+
+                const y = canvas.height - 105 + index * 18;
                 if (text.trim() !== "") {
-                    ctx.fillText(text, userTextX, y); // 빈 문자열이 아닌 경우에만 텍스트를 그립니다.
+                    ctx.fillText(text, userTextX, y);
                 }
             });
 
-            // 이미지 다운로드
+            const selectedDateTextY = canvas.height - 105 + 4 * 18;
+            ctx.fillText(selectedDate, userTextX, selectedDateTextY);
+
             const imageDataURL = canvas
                 .toDataURL("image/png")
                 .replace("image/png", "image/octet-stream");
             const downloadLink = document.createElement("a");
-            // 원본 이미지 파일의 이름으로 다운로드 링크의 파일 이름 설정
-            const originalFileName = imageName || "image"; // imageName이 없으면 "image"로 설정
+            const originalFileName = imageName || "cropped_image";
             downloadLink.href = imageDataURL;
-            downloadLink.download = `${originalFileName}`; // 파일 확장자를 항상 png로 설정
-            canvasContainer.appendChild(canvas); // 캔버스를 캔버스 컨테이너에 추가합니다.
-
-            // 이미지 다운로드 후에는 캔버스와 캔버스 컨테이너를 삭제합니다.
-            downloadLink.addEventListener("click", () => {
-                setTimeout(() => {
-                    document.body.removeChild(canvasContainer);
-                }, 0);
-            });
+            downloadLink.download = `${originalFileName}`;
 
             downloadLink.click();
+
+            setTimeout(() => {
+                document.body.removeChild(canvasContainer);
+            }, 0);
         };
 
         image.src = imageSrc;
-        canvasContainer.appendChild(image); // 이미지를 캔버스 컨테이너에 추가합니다.
+        canvasContainer.appendChild(image);
         document.body.appendChild(canvasContainer);
     };
 
@@ -121,20 +185,40 @@ const App = () => {
                     <p className="label">{label}</p>
                 </td>
                 <td>
-                    <Input
-                        size="sm"
-                        type="text"
-                        variant="outlined"
-                        color="primary"
-                        placeholder="Enter text here"
-                        value={inputText[index]}
-                        onChange={(e) => handleInputChange(index, e)}
-                        disabled={!isFileSelected}
-                    />
+                    {index === fixedText.length - 1 ? ( // 마지막 인덱스인지 확인
+                        <input
+                            type="date"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                        />
+                    ) : (
+                        // 다른 인덱스에 대한 텍스트 입력 렌더링
+                        <Input
+                            size="sm"
+                            type="text"
+                            variant="outlined"
+                            color="primary"
+                            placeholder="여기에 텍스트 입력"
+                            value={inputText[index]}
+                            onChange={(e) => handleInputChange(index, e)}
+                        />
+                    )}
                 </td>
             </tr>
         ));
     };
+
+    const VisuallyHiddenInput = styled("input")({
+        clip: "rect(0 0 0 0)",
+        clipPath: "inset(50%)",
+        height: 1,
+        overflow: "hidden",
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        whiteSpace: "nowrap",
+        width: 1,
+    });
 
     const renderTextList = () => {
         return fixedText.map((label, index) => (
@@ -154,7 +238,8 @@ const App = () => {
                         borderAxis="none"
                         sx={{
                             "--TableCell-paddingY": "0px",
-                        }}>
+                        }}
+                    >
                         <tbody>{renderTextInputs()}</tbody>
                     </Table>
                 </div>
@@ -165,45 +250,62 @@ const App = () => {
                         style={{ display: "none" }}
                         onChange={handleFileChange}
                     />
-                    <Button variant="soft" onClick={handleFileButtonClick}>
+                    <Button
+                        variant={variant}
+                        color="primary"
+                        onClick={handleFileButtonClick}
+                    >
                         Choose File
                     </Button>{" "}
                     <Button
                         className="addBtn"
                         onClick={handleAddText}
-                        disabled={!isFileSelected}>
+                        variant={variant}
+                        color="danger"
+                        disabled={!isFileSelected}
+                    >
                         reset
                     </Button>
                 </div>
+                <div className="fileContainer">
+                    <div className="buttonContainer">
+                        <Button
+                            component="a"
+                            href="#as-link"
+                            variant={variant}
+                            color="success"
+                            onClick={handleDownloadImage}
+                            startDecorator={<OpenInNew />}
+                        >
+                            download
+                        </Button>
+                    </div>
+                </div>
             </div>
             <div className="image-show">
-                <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
                 <div className="image-container">
                     {imageSrc && (
                         <div className="img-container">
-                            <img
-                                className="img"
-                                src={imageSrc}
-                                alt="Uploaded"
+                            <MyCropper
+                                imageSrc={imageSrc}
+                                onCropComplete={handleCropComplete}
                             />
+
                             <Table
                                 className="text-table text-overlay"
                                 size="sm"
                                 sx={{
                                     "--TableCell-paddingY": "0px",
-                                }}>
-                                <tbody>{renderTextList()}</tbody>
+                                }}
+                            >
+                                <tbody>{renderTextList().slice(0, -1)}</tbody>
+                                <tr>
+                                    <td className="fixed-text">일자</td>
+                                    <td className="add-text">{selectedDate}</td>
+                                </tr>
                             </Table>
                         </div>
                     )}
-                </div>
-            </div>
-            <div className="fileContainer">
-                <div className="fileInput">
-                    <p id="fileName">{imageName}</p>
-                </div>
-                <div className="buttonContainer">
-                    <Button onClick={handleDownloadImage}>Download1🙂</Button>
                 </div>
             </div>
         </div>
