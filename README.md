@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+# 이미지 크롭 및 텍스트 주석 애플리케이션
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+이 React 애플리케이션은 사용자가 이미지를 업로드하고, 자르고, 원하는 텍스트와 날짜를 주석으로 추가할 수 있도록 설계되었습니다. 깔끔하고 모듈화된 구조를 통해 유지보수와 확장이 용이합니다.
 
-## Available Scripts
+## 주요 기능
 
-In the project directory, you can run:
+- **이미지 업로드**: 파일 선택을 통해 이미지를 업로드할 수 있습니다.
+- **이미지 크롭**: 업로드한 이미지를 원하는 크기로 자를 수 있습니다.
+- **텍스트 주석**: 프로젝트명, 위치, 내용, 날짜 등의 텍스트를 이미지에 추가 가능.
+- **날짜 입력**: 선택한 날짜를 이미지에 주석으로 추가 가능.
+- **이미지 다운로드**: 수정된 이미지를 로컬에 저장할 수 있습니다.
 
-### `npm start`
+## 구성 요소
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+애플리케이션은 다음과 같은 React 컴포넌트로 구성되어 있습니다:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. **`TextInputTable`**  
+   - 텍스트 및 날짜 입력 필드를 처리합니다.
 
-### `npm test`
+2. **`FileUploadControls`**  
+   - 파일 업로드 및 선택, 초기화, 다운로드 버튼과 같은 액션을 제공합니다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. **`ImageDisplay`**  
+   - 업로드된 이미지를 표시하고 크롭 기능을 포함합니다.
 
-### `npm run build`
+## 시작하기
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 사전 준비
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Node.js (16 버전 이상)
+- npm 또는 yarn
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 설치 방법
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. 저장소 클론:
+   ```bash
+   git clone https://github.com/your-username/your-repository.git
+   cd your-repository
+# Image-app
